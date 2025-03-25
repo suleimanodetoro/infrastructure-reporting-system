@@ -154,7 +154,7 @@ export class AmplifyInfrastructureStack extends cdk.Stack {
     // Create the Amplify app - replace with your GitHub details
     const amplifyApp = new amplify.App(this, 'SafetyReportingApp', {
       sourceCodeProvider: new amplify.GitHubSourceCodeProvider({
-        owner: 'YOUR_GITHUB_USERNAME', // Replace with your GitHub username
+        owner: 'suleimanodetoro',
         repository: 'infrastructure-reporting-system', // Your repository name
         oauthToken: cdk.SecretValue.secretsManager('github-token') // Stored in Secrets Manager
       }),
