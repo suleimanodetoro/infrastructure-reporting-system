@@ -1,20 +1,32 @@
 #!/usr/bin/env node
+// File: cdk-infra/bin/cdk-infra.ts
+
+import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CdkInfraStack } from '../lib/cdk-infra-stack';
+import { AmplifyInfrastructureStack } from '../lib/stacks/amplify-infrastructure-stack';
 
 const app = new cdk.App();
-new CdkInfraStack(app, 'CdkInfraStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
 
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+// Environment configuration
+const env = { 
+  account: process.env.CDK_DEFAULT_ACCOUNT, 
+  region: process.env.CDK_DEFAULT_REGION || 'eu-west-2'
+};
 
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
+// Tags that will be applied to all resources
+const tags = {
+  Project: 'CommunitySafetyPlatform',
+  Environment: 'Development', // Change for staging/production
+  Owner: 'InfraTeam'
+};
 
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+// Create the infrastructure stack using Amplify
+const amplifyInfraStack = new AmplifyInfrastructureStack(app, 'SafetyPlatform-Amplify-Dev', { 
+  env,
+  description: 'Core infrastructure with Amplify for the Community Safety Intelligence Platform',
 });
+
+// Apply tags to all resources in all stacks
+for (const [key, value] of Object.entries(tags)) {
+  cdk.Tags.of(app).add(key, value);
+}
